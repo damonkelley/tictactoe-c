@@ -1,2 +1,5 @@
 !deps/Makefile
 deps/*
+*.o
+runtests
+build/
