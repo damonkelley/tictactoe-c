@@ -19,7 +19,7 @@ clean-all:
 .PHONY: clean
 clean:
 	rm -f */*.o
-	rm -f main
+	rm -f main runtests
 	rm -rf build
 
 .PHONY: build-image
