@@ -14,7 +14,7 @@ deps:
 
 .PHONY: clean-all
 clean-all:
-	git clean -ffxd
+	git clean -ffxd --exclude=.exrc
 
 .PHONY: clean
 clean:
@@ -46,3 +46,7 @@ runtests: $(TEST_OBJECTS) tictactoe
 .PHONY: test
 test: runtests
 	LD_LIBRARY_PATH=build:deps/usr/local/lib ./runtests --verbose
+
+.PHONY: valgrind
+valgrind: runtests
+	LD_LIBRARY_PATH=build:deps/usr/local/lib valgrind ./runtests --verbose
