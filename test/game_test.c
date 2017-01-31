@@ -26,3 +26,18 @@ Test(Game, ItAlternatesThePlayers) {
 
     game->destroy(game);
 }
+
+Test(Game, ItPreventsAMoveToAnOccupiedSpace) {
+    Board *board = BoardNew();
+    Game *game = GameNew(board);
+
+    bool result = game->move(game, 1);
+    cr_assert_eq(result, true);
+    cr_assert_eq(board->get(board, 1), 'X');
+
+    result = game->move(game, 1);
+    cr_assert_eq(result, false);
+    cr_assert_eq(board->get(board, 1), 'X');
+
+    game->destroy(game);
+}

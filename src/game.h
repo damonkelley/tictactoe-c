@@ -1,7 +1,8 @@
+#include <stdbool.h>
 #include "board.h"
 
 typedef struct Game {
-    void (*move)(struct Game *self, int space);
+    bool (*move)(struct Game *self, int space);
     void (*destroy)(struct Game *self);
     char next_player;
     Board *board;

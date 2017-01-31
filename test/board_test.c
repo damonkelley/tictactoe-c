@@ -5,7 +5,9 @@ Test(Board, APieceCanBeAdded) {
     Board *board = BoardNew();
     board->add(board, 'X', 1);
 
-    char expected[] = {'\0', 'X', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
+    char expected[] = {EMPTY_SPACE, 'X',         EMPTY_SPACE,
+                       EMPTY_SPACE, EMPTY_SPACE, EMPTY_SPACE,
+                       EMPTY_SPACE, EMPTY_SPACE, EMPTY_SPACE};
 
     for (int i = 0; i < 9; i++) {
         if (board->spaces[i] != expected[i])
@@ -50,6 +52,18 @@ Test(Board, ItReturnsAnErrorWhenTheIndexDoesntExists) {
 
     err = board->get(board, -1);
     cr_assert_eq(err, -1);
+
+    board->destroy(board);
+}
+
+Test(Board, ItHasAvailableAndUnavailableSpaces) {
+    Board *board = BoardNew();
+
+    board->add(board, 'X', 1);
+
+    cr_assert_eq(board->is_available(board, 0), 1);
+    cr_assert_eq(board->is_available(board, 1), 0);
+    cr_assert_eq(board->is_available(board, -1), 0);
 
     board->destroy(board);
 }
