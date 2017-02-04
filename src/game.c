@@ -5,10 +5,14 @@ static bool can_move(Game* self, int space) {
     return self->board->is_available(self->board, space);
 }
 
+static char get(Game* self, int space) {
+    return self->board->get(self->board, space);
+}
+
 static bool all_markers_match(Game* self, int spaces[3]) {
-    char a = self->board->get(self->board, spaces[0]);
-    char b = self->board->get(self->board, spaces[1]);
-    char c = self->board->get(self->board, spaces[2]);
+    char a = get(self, spaces[0]);
+    char b = get(self, spaces[1]);
+    char c = get(self, spaces[2]);
 
     if (a != EMPTY_SPACE) {
         return a == b && a == c;
