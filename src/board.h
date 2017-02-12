@@ -1,4 +1,4 @@
-#define EMPTY_SPACE '\0'
+#define EMPTY_SPACE '-'
 
 #include <stdbool.h>
 
