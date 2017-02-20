@@ -5,7 +5,7 @@ Test(Board, APieceCanBeAdded) {
     Board *board = BoardNew();
     board->add(board, 'X', 1);
 
-    char expected[] = {EMPTY_SPACE, 'X',         EMPTY_SPACE,
+    Space expected[] = {EMPTY_SPACE, 'X',         EMPTY_SPACE,
                        EMPTY_SPACE, EMPTY_SPACE, EMPTY_SPACE,
                        EMPTY_SPACE, EMPTY_SPACE, EMPTY_SPACE};
 
@@ -21,7 +21,7 @@ Test(Board, APieceCanBeAdded) {
 Test(Board, FalseIsReturnedIfThePeicesCannotBeAdded) {
     Board *board = BoardNew();
 
-    int result = board->add(board, 'X', 11);
+    bool result = board->add(board, 'X', 11);
     cr_assert_eq(result, false);
 
     result = board->add(board, 'O', -1);
@@ -33,13 +33,13 @@ Test(Board, FalseIsReturnedIfThePeicesCannotBeAdded) {
 Test(Board, ASpaceCanBeQueried) {
     Board *board = BoardNew();
 
-    int marker = board->get(board, 1);
-    cr_assert_eq(marker, EMPTY_SPACE);
+    Space space = board->get(board, 1);
+    cr_assert_eq(space, EMPTY_SPACE);
 
     board->add(board, 'O', 1);
-    marker = board->get(board, 1);
+    space = board->get(board, 1);
 
-    cr_assert_eq(marker, 'O');
+    cr_assert_eq(space, 'O');
 
     board->destroy(board);
 }
@@ -47,11 +47,11 @@ Test(Board, ASpaceCanBeQueried) {
 Test(Board, ItReturnsFalseWhenTheIndexDoesntExists) {
     Board *board = BoardNew();
 
-    int result = board->get(board, 11);
-    cr_assert_eq(result, false);
+    Space space = board->get(board, 11);
+    cr_assert_eq(space, false);
 
-    result = board->get(board, -1);
-    cr_assert_eq(result, false);
+    space = board->get(board, -1);
+    cr_assert_eq(space, false);
 
     board->destroy(board);
 }
