@@ -40,10 +40,6 @@ static bool is_draw(Game* self) {
     return true;
 }
 
-static void update_turn(Game* self) {
-    self->next_player = self->next_player == 'X' ? 'O' : 'X';
-}
-
 static void update_outcome(Game* self) {
     if (has_winner(self))
         self->outcome = Winner;
@@ -51,9 +47,18 @@ static void update_outcome(Game* self) {
         self->outcome = Draw;
 }
 
+static void update_winner(Game* self) {
+    if (has_winner(self)) self->winner = self->turn;
+}
+
+static void update_turn(Game* self) {
+    self->turn = self->turn == 'X' ? 'O' : 'X';
+}
+
 static void update_game(Game* self) {
-    update_turn(self);
     update_outcome(self);
+    update_winner(self);
+    update_turn(self);
 }
 
 static bool move(Game* self, int space) {
@@ -62,7 +67,7 @@ static bool move(Game* self, int space) {
     }
 
     Board* board = self->board;
-    board->add(board, self->next_player, space);
+    board->add(board, self->turn, space);
 
     update_game(self);
     return true;
@@ -78,7 +83,8 @@ Game* GameNew(Board* board) {
     game->board = board;
     game->move = move;
     game->destroy = destroy;
-    game->next_player = 'X';
+    game->turn = 'X';
+    game->winner = false;
     game->outcome = InProgress;
     return game;
 }

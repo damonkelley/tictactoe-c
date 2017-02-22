@@ -89,3 +89,23 @@ Test(Game, TheOutcomeIsDraw) {
 
     cr_assert_eq(game->outcome, Draw);
 }
+
+Test(Game, ItHasAWinner) {
+    Board *board = BoardNew();
+    Game *game = GameNew(board);
+
+    cr_assert_eq(game->winner, false);
+
+    make_win(game);
+
+    cr_assert_eq(game->winner, 'X');
+}
+
+Test(Game, ThereIsNoWinnerWhenTheGameIsADraw) {
+    Board *board = BoardNew();
+    Game *game = GameNew(board);
+
+    make_draw(game);
+
+    cr_assert_eq(game->winner, false);
+}
