@@ -1,3 +1,6 @@
+#ifndef __BOARD_H
+#define __BOARD_H
+
 #define EMPTY_SPACE '-'
 
 #include <stdbool.h>
@@ -13,3 +16,4 @@ typedef struct Board {
 } Board;
 
 Board *BoardNew();
+#endif
