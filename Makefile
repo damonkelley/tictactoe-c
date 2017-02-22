@@ -24,7 +24,7 @@ clean:
 
 .PHONY: build-image
 build-image:
-	docker build . -t damonkelley/tttc
+	docker build . -t damonkelley/tttc -q
 
 .PHONY: docker-%
 docker-%: build-image
