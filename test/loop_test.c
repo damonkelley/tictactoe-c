@@ -41,12 +41,14 @@ static Game* game;
 static Board* board;
 static UI ui;
 
-void setup(void) {
+static void setup(void) {
     board = BoardNew();
     game = GameNew(board);
 }
 
-Test(Loop, ItStopsWhenTheGameHasAWinner, .init = setup) {
+static void teardown(void) { game->destroy(game); }
+
+Test(Loop, ItStopsWhenTheGameHasAWinner, .init = setup, .fini = teardown) {
     fake_ui(&ui, x_wins);
 
     loop(game, &ui);
@@ -55,7 +57,7 @@ Test(Loop, ItStopsWhenTheGameHasAWinner, .init = setup) {
     cr_assert_eq(game->winner, 'X');
 }
 
-Test(Loop, ItStopsWhenTheGameIsOver, .init = setup) {
+Test(Loop, ItStopsWhenTheGameIsOver, .init = setup, .fini = teardown) {
     fake_ui(&ui, draw);
 
     loop(game, &ui);
@@ -63,7 +65,7 @@ Test(Loop, ItStopsWhenTheGameIsOver, .init = setup) {
     cr_assert_eq(game->winner, false);
 }
 
-Test(Loop, ItPrintsAMessageOnEveryLoop, .init = setup) {
+Test(Loop, ItPrintsAMessageOnEveryLoop, .init = setup, .fini = teardown) {
     fake_ui(&ui, x_wins);
 
     loop(game, &ui);

@@ -21,21 +21,22 @@ void make_draw(Game *game) {
     game->move(game, 7);
 }
 
-Test(Game, APlayerCanMove) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
+Board *board;
+Game *game;
 
-    game->move(game, 1);
-
-    cr_assert_eq(board->get(board, 1), 'X');
-
-    game->destroy(game);
+static void setup(void) {
+    board = BoardNew();
+    game = GameNew(board);
 }
 
-Test(Game, ItAlternatesThePlayers) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
+static void teardown(void) { game->destroy(game); }
 
+Test(Game, APlayerCanMove, .init = setup, .fini = teardown) {
+    game->move(game, 1);
+    cr_assert_eq(board->get(board, 1), 'X');
+}
+
+Test(Game, ItAlternatesThePlayers, .init = setup, .fini = teardown) {
     game->move(game, 1);
     game->move(game, 0);
     game->move(game, 3);
@@ -43,14 +44,9 @@ Test(Game, ItAlternatesThePlayers) {
     cr_assert_eq(board->get(board, 1), 'X');
     cr_assert_eq(board->get(board, 0), 'O');
     cr_assert_eq(board->get(board, 3), 'X');
-
-    game->destroy(game);
 }
 
-Test(Game, ItPreventsAMoveToAnOccupiedSpace) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
-
+Test(Game, ItPreventsAMoveToAnOccupiedSpace, .init = setup, .fini = teardown) {
     bool result = game->move(game, 1);
     cr_assert_eq(result, true);
     cr_assert_eq(board->get(board, 1), 'X');
@@ -58,42 +54,27 @@ Test(Game, ItPreventsAMoveToAnOccupiedSpace) {
     result = game->move(game, 1);
     cr_assert_eq(result, false);
     cr_assert_eq(board->get(board, 1), 'X');
-
-    game->destroy(game);
 }
 
-Test(Game, TheOutcomeIsInProgress) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
-
+Test(Game, TheOutcomeIsInProgress, .init = setup, .fini = teardown) {
     cr_assert_eq(game->outcome, InProgress);
 
     game->move(game, 0);
+
     cr_assert_eq(game->outcome, InProgress);
 }
 
-Test(Game, TheOutcomeIsWinner) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
-
+Test(Game, TheOutcomeIsWinner, .init = setup, .fini = teardown) {
     make_win(game);
-
     cr_assert_eq(game->outcome, Winner);
 }
 
-Test(Game, TheOutcomeIsDraw) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
-
+Test(Game, TheOutcomeIsDraw, .init = setup, .fini = teardown) {
     make_draw(game);
-
     cr_assert_eq(game->outcome, Draw);
 }
 
-Test(Game, ItHasAWinner) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
-
+Test(Game, ItHasAWinner, .init = setup, .fini = teardown) {
     cr_assert_eq(game->winner, false);
 
     make_win(game);
@@ -101,11 +82,7 @@ Test(Game, ItHasAWinner) {
     cr_assert_eq(game->winner, 'X');
 }
 
-Test(Game, ThereIsNoWinnerWhenTheGameIsADraw) {
-    Board *board = BoardNew();
-    Game *game = GameNew(board);
-
+Test(Game, ThereIsNoWinnerWhenTheGameIsADraw, .init = setup, .fini = teardown) {
     make_draw(game);
-
     cr_assert_eq(game->winner, false);
 }
