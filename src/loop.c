@@ -5,5 +5,6 @@
 void loop(Game* game, UI* ui) {
     while (game->outcome == InProgress) {
         game->move(game, ui->read());
+        ui->write(ui, "");
     }
 }

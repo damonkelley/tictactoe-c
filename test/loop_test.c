@@ -4,6 +4,8 @@
 #include "game.h"
 #include "ui.h"
 
+#define UNUSED(x) (void)(x)
+
 typedef int (*Reader)(void);
 
 static int x_wins() {
@@ -18,33 +20,53 @@ static int draw() {
     return *move++;
 }
 
-static void __write() {}
+static char* buffer;
+static size_t len;
 
-static UI fake_ui(Reader reader) {
-    UI ui;
-    ui.read = reader;
-    ui.write = __write;
-    return ui;
+static void writer(UI* self, char* message) {
+    UNUSED(message);
+    fputs("turn ", self->out);
+    fflush(self->out);
 }
 
-Test(Loop, ItStopsWhenTheGameHasAWinner) {
-    Board* board = BoardNew();
-    Game* game = GameNew(board);
+extern FILE* open_memstream(char** ptr, size_t* sizeloc);
 
-    UI ui = fake_ui(x_wins);
+static void fake_ui(UI* ui, Reader reader) {
+    ui->read = reader;
+    ui->write = writer;
+    ui->out = open_memstream(&buffer, &len);
+}
+
+static Game* game;
+static Board* board;
+static UI ui;
+
+void setup(void) {
+    board = BoardNew();
+    game = GameNew(board);
+}
+
+Test(Loop, ItStopsWhenTheGameHasAWinner, .init = setup) {
+    fake_ui(&ui, x_wins);
 
     loop(game, &ui);
+
     cr_assert_eq(game->outcome, Winner);
     cr_assert_eq(game->winner, 'X');
 }
 
-Test(Loop, ItStopsWhenTheGameIsOver) {
-    Board* board = BoardNew();
-    Game* game = GameNew(board);
-
-    UI ui = fake_ui(draw);
+Test(Loop, ItStopsWhenTheGameIsOver, .init = setup) {
+    fake_ui(&ui, draw);
 
     loop(game, &ui);
     cr_assert_eq(game->outcome, Draw);
     cr_assert_eq(game->winner, false);
+}
+
+Test(Loop, ItPrintsAMessageOnEveryLoop, .init = setup) {
+    fake_ui(&ui, x_wins);
+
+    loop(game, &ui);
+
+    cr_assert_str_eq("turn turn turn turn turn ", buffer);
 }
