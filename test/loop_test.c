@@ -6,35 +6,30 @@
 
 #define UNUSED(x) (void)(x)
 
-typedef int (*Reader)(void);
-
-static int x_wins() {
-    static int moves[5] = {0, 3, 1, 4, 2};
-    static int* move = moves;
-    return *move++;
-}
-
-static int draw() {
-    static int moves[9] = {0, 2, 6, 3, 4, 8, 5, 1, 7};
-    static int* move = moves;
-    return *move++;
-}
-
-static char* buffer;
-static size_t len;
-
 static void writer(UI* self, char* message) {
     UNUSED(message);
     fputs("turn ", self->out);
     fflush(self->out);
 }
 
-extern FILE* open_memstream(char** ptr, size_t* sizeloc);
+static int reader(UI* self) {
+    int move;
+    fscanf(self->in, "%d", &move);
+    return move;
+}
 
-static void fake_ui(UI* ui, Reader reader) {
-    ui->read = reader;
-    ui->write = writer;
+extern FILE* open_memstream(char** ptr, size_t* sizeloc);
+extern FILE* fmemopen(void* buf, size_t size, const char* mode);
+
+static char* buffer;
+static size_t len;
+
+static void FakeUI(UI* ui, char* moves) {
+    ui->read_move = reader;
+    ui->display = writer;
+
     ui->out = open_memstream(&buffer, &len);
+    ui->in = fmemopen(moves, strlen(moves), "r");
 }
 
 static Game* game;
@@ -49,7 +44,7 @@ static void setup(void) {
 static void teardown(void) { game->destroy(game); }
 
 Test(Loop, ItStopsWhenTheGameHasAWinner, .init = setup, .fini = teardown) {
-    fake_ui(&ui, x_wins);
+    FakeUI(&ui, "0 3 1 4 2");
 
     loop(game, &ui);
 
@@ -58,7 +53,7 @@ Test(Loop, ItStopsWhenTheGameHasAWinner, .init = setup, .fini = teardown) {
 }
 
 Test(Loop, ItStopsWhenTheGameIsOver, .init = setup, .fini = teardown) {
-    fake_ui(&ui, draw);
+    FakeUI(&ui, "0 2 6 3 4 8 5 1 7");
 
     loop(game, &ui);
     cr_assert_eq(game->outcome, Draw);
@@ -66,7 +61,7 @@ Test(Loop, ItStopsWhenTheGameIsOver, .init = setup, .fini = teardown) {
 }
 
 Test(Loop, ItPrintsAMessageOnEveryLoop, .init = setup, .fini = teardown) {
-    fake_ui(&ui, x_wins);
+    FakeUI(&ui, "0 3 1 4 2");
 
     loop(game, &ui);
 
