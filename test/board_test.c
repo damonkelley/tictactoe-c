@@ -14,7 +14,7 @@ Test(Board, APieceCanBeAdded, .init = setup, .fini = teardown) {
                         EMPTY_SPACE, EMPTY_SPACE, EMPTY_SPACE,
                         EMPTY_SPACE, EMPTY_SPACE, EMPTY_SPACE};
 
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < board->size; i++) {
         if (board->spaces[i] != expected[i])
             cr_assert_fail("INDEX %d: %d does not equal %d", i,
                            board->spaces[i], expected[i]);

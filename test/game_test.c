@@ -2,23 +2,23 @@
 #include <criterion/criterion.h>
 
 void make_win(Game *game) {
-    game->move(game, 0);
-    game->move(game, 3);
     game->move(game, 1);
     game->move(game, 4);
     game->move(game, 2);
+    game->move(game, 5);
+    game->move(game, 3);
 }
 
 void make_draw(Game *game) {
-    game->move(game, 0);
-    game->move(game, 2);
-    game->move(game, 6);
-    game->move(game, 3);
-    game->move(game, 4);
-    game->move(game, 8);
-    game->move(game, 5);
     game->move(game, 1);
+    game->move(game, 3);
     game->move(game, 7);
+    game->move(game, 4);
+    game->move(game, 5);
+    game->move(game, 9);
+    game->move(game, 6);
+    game->move(game, 2);
+    game->move(game, 8);
 }
 
 Board *board;
@@ -32,14 +32,14 @@ static void setup(void) {
 static void teardown(void) { game->destroy(game); }
 
 Test(Game, APlayerCanMove, .init = setup, .fini = teardown) {
-    game->move(game, 1);
+    game->move(game, 2);
     cr_assert_eq(board->get(board, 1), 'X');
 }
 
 Test(Game, ItAlternatesThePlayers, .init = setup, .fini = teardown) {
+    game->move(game, 2);
     game->move(game, 1);
-    game->move(game, 0);
-    game->move(game, 3);
+    game->move(game, 4);
 
     cr_assert_eq(board->get(board, 1), 'X');
     cr_assert_eq(board->get(board, 0), 'O');
@@ -47,11 +47,11 @@ Test(Game, ItAlternatesThePlayers, .init = setup, .fini = teardown) {
 }
 
 Test(Game, ItPreventsAMoveToAnOccupiedSpace, .init = setup, .fini = teardown) {
-    bool result = game->move(game, 1);
+    bool result = game->move(game, 2);
     cr_assert_eq(result, true);
     cr_assert_eq(board->get(board, 1), 'X');
 
-    result = game->move(game, 1);
+    result = game->move(game, 2);
     cr_assert_eq(result, false);
     cr_assert_eq(board->get(board, 1), 'X');
 }
@@ -59,7 +59,7 @@ Test(Game, ItPreventsAMoveToAnOccupiedSpace, .init = setup, .fini = teardown) {
 Test(Game, TheOutcomeIsInProgress, .init = setup, .fini = teardown) {
     cr_assert_eq(game->outcome, InProgress);
 
-    game->move(game, 0);
+    game->move(game, 1);
 
     cr_assert_eq(game->outcome, InProgress);
 }

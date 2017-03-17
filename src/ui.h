@@ -3,10 +3,13 @@
 #include <stdio.h>
 
 typedef struct UI {
-    FILE * out;
-    FILE * in;
-    int (*read_move)(struct UI * self);
+    FILE *out;
+    FILE *in;
+    int (*read_move)(struct UI *self);
     void (*display)(struct UI *self, char *message);
+    void (*destroy)(struct UI *self);
 } UI;
+
+UI *UINew(FILE *in, FILE *out);
 
 #endif

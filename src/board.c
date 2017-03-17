@@ -31,6 +31,7 @@ Board *BoardNew() {
 
     Board *board = malloc(sizeof(Board));
     memcpy(board->spaces, spaces, sizeof(board->spaces));
+    board->size = 9;
     board->add = Board_add;
     board->get = Board_get;
     board->is_available = Board_is_available;

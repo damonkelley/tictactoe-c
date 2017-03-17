@@ -13,6 +13,7 @@ typedef struct Board {
     Space (*get)(struct Board *self, int id);
     void (*destroy)(struct Board *self);
     bool (*is_available)(struct Board *self, int id);
+    int size;
 } Board;
 
 Board *BoardNew();

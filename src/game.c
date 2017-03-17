@@ -61,7 +61,8 @@ static void update_game(Game* self) {
     update_turn(self);
 }
 
-static bool move(Game* self, int space) {
+static bool move(Game* self, int id) {
+    int space = id - 1;
     if (!can_move(self, space)) {
         return false;
     }
