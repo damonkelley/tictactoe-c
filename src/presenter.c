@@ -6,11 +6,11 @@
 
 static int id_to_char(int id) { return id + 49; }
 
-static char format_space(Game* game, int space_id) {
+static char format_space(Game* game, int id) {
     Board* board = game->board;
     char s;
-    if ((s = board->get(board, space_id)) == EMPTY_SPACE)
-        return id_to_char(space_id);
+    if ((s = board->get(board, id)) == EMPTY_SPACE)
+        return id_to_char(id);
     else
         return s;
 }
@@ -20,19 +20,18 @@ static char format_space(Game* game, int space_id) {
 char* present(Game* game) {
     static char buffer[12 * 5];
 
-    Board* board = game->board;
-    for (int i = 0; i < board->size; i++) {
-        char space[3];
-        if (i == 2 || i == 5) {
-            sprintf(space, " %c\n", format_space(game, i));
-            strcat(buffer, space);
+    FOREACH_SPACE(space, game->board->spaces) {
+        char cell[3];
+        if (space->id == 2 || space->id == 5) {
+            sprintf(cell, " %c\n", format_space(game, space->id));
+            strcat(buffer, cell);
             strcat(buffer, SEPARATOR);
-        } else if (i == 8) {
-            sprintf(space, " %c\n", format_space(game, i));
-            strcat(buffer, space);
+        } else if (space->id == 8) {
+            sprintf(cell, " %c\n", format_space(game, space->id));
+            strcat(buffer, cell);
         } else {
-            sprintf(space, " %c |", format_space(game, i));
-            strcat(buffer, space);
+            sprintf(cell, " %c |", format_space(game, space->id));
+            strcat(buffer, cell);
         }
     }
     return buffer;
