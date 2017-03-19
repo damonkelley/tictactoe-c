@@ -17,8 +17,11 @@ static char format_space(Game* game, int id) {
 
 #define SEPARATOR "---+---+---\n"
 
+static void reset(char* buffer) { memset(&buffer[0], 0, sizeof(buffer)); }
+
 char* present(Game* game) {
     static char buffer[12 * 5];
+    reset(buffer);
 
     FOREACH_SPACE(space, game->board->spaces) {
         char cell[3];

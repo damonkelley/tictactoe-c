@@ -31,3 +31,22 @@ Test(Presenter, ItPresentsAGameWithOneMove) {
 
     cr_assert_str_eq(output, expected);
 }
+
+Test(Presenter, ItOnlyPresentsTheLastGameState) {
+    Game *game = GameNew(BoardNew());
+
+    present(game);
+
+    game->move(game, 5);
+
+    char *output = present(game);
+
+    char *expected =
+        " 1 | 2 | 3\n"
+        "---+---+---\n"
+        " 4 | X | 6\n"
+        "---+---+---\n"
+        " 7 | 8 | 9\n";
+
+    cr_assert_str_eq(output, expected);
+}
