@@ -13,6 +13,11 @@ static int read_move(UI *ui) {
     return move;
 }
 
+static void update(UI * ui) {
+    fputs("\033[H\033[2J", ui->out);
+    fflush(ui->out);
+}
+
 static void destroy(UI *ui) {
     free(ui->in);
     free(ui->out);
@@ -23,6 +28,7 @@ UI *UINew(FILE *in, FILE *out) {
     UI *ui = malloc(sizeof(UI));
     ui->in = in;
     ui->out = out;
+    ui->update = update;
     ui->display = display;
     ui->read_move = read_move;
     ui->destroy = destroy;

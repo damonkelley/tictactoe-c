@@ -43,3 +43,10 @@ Test(UI, ItCanBeDestroyed) {
     ui = UINew(fake_in("1 2"), fake_out(&output));
     ui->destroy(ui);
 }
+
+Test(UI, ItWillRedrawTheScreen, .fini = teardown) {
+    char* output;
+    ui = UINew(fake_in("1 2"), fake_out(&output));
+    ui->update(ui);
+    cr_assert_str_eq("\033[H\033[2J", output);
+}

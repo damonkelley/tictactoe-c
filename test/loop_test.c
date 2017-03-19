@@ -13,10 +13,15 @@ extern FILE* fmemopen(void* buf, size_t size, const char* mode);
 static char* buffer;
 static size_t len;
 
+static void update_stub(UI* ui) { ui->display(ui, "update "); }
+
 static UI* FakeUI(char* moves) {
     FILE* out = open_memstream(&buffer, &len);
     FILE* in = fmemopen(moves, strlen(moves), "r");
-    return UINew(in, out);
+
+    UI* ui = UINew(in, out);
+    ui->update = update_stub;
+    return ui;
 }
 
 static char* fake_presenter(Game* game) {
@@ -27,10 +32,7 @@ static char* fake_presenter(Game* game) {
 static Game* game;
 static UI* ui;
 
-static void setup(void) {
-    Board* board = BoardNew();
-    game = GameNew(board);
-}
+static void setup(void) { game = GameNew(BoardNew()); }
 
 static void teardown(void) {
     game->destroy(game);
@@ -62,5 +64,8 @@ Test(Loop, ItPresentsTheGameOnEveryTurn, .init = setup, .fini = teardown,
 
     loop(game, ui, fake_presenter);
 
-    cr_assert_str_eq("turn turn turn turn turn turn ", buffer);
+    cr_assert_str_eq(
+        "update turn update turn update turn update turn update turn update "
+        "turn ",
+        buffer);
 }

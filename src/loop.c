@@ -1,14 +1,13 @@
 #include "game.h"
 #include "presenter.h"
-#include "stdio.h"
 #include "ui.h"
 
 void loop(Game* game, UI* ui, Presenter present) {
+    ui->update(ui);
     ui->display(ui, present(game));
-    int move;
     while (game->outcome == InProgress) {
-        move = ui->read_move(ui);
-        game->move(game, move);
+        game->move(game, ui->read_move(ui));
+        ui->update(ui);
         ui->display(ui, present(game));
     }
 }
