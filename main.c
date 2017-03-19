@@ -1,3 +1,11 @@
+#include "board.h"
+#include "game.h"
+#include "loop.h"
+#include "presenter.h"
+#include "ui.h"
+
 int main() {
-    return 0;
+    Game* game = GameNew(BoardNew());
+    UI* ui = UINew(stdin, stdout);
+    loop(game, ui, present);
 }

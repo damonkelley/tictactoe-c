@@ -34,8 +34,8 @@ static bool has_winner(Game* self) {
 }
 
 static bool is_draw(Game* self) {
-    for (int space = 0; space < 8; space++) {
-        if (can_move(self, space)) return false;
+    FOREACH_SPACE(space, self->board->spaces) {
+        if (can_move(self, space->id)) return false;
     }
     return true;
 }

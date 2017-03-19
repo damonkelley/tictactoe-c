@@ -51,6 +51,7 @@ test: runtests
 valgrind: runtests
 	LD_LIBRARY_PATH=build:/usr/local/lib valgrind ./runtests --verbose
 
+main: CFLAGS += -Isrc
 main: $(TICTACTOE_TARGET)
 	$(CC) $(CFLAGS) -Lbuild -o $@ $@.c -ltictactoe
 
